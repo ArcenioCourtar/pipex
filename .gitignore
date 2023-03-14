@@ -3,3 +3,7 @@ pipex
 *.a
 README.md
 .DS_Store
+.vscode
+test*
+infile
+outfile
