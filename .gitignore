@@ -1,0 +1,5 @@
+pipex
+*.o
+*.a
+README.md
+.DS_Store
