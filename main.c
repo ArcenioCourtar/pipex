@@ -6,56 +6,84 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:20 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/14 18:13:42 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/20 18:39:53 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include <unistd.h>		// pipe(), close(), read(), execve()
+#include "pipex.h"
+#include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
 #include <fcntl.h>		// open()
 #include <stdlib.h>		// exit()
 #include <sys/wait.h>	// wait()
-#include <stdio.h>		// printf()
+#include <stdio.h>		// printf(), perror()
 
-int main(int argc, char *argv[])
+void	check_args(int argc)
 {
-	int 	f1, f2;
-	int 	pipefd[2];
-	char	buf[1000];
-	pid_t 	forkpid;
-
 	if (argc != 5)
 	{
-		ft_printf("too few args\n");
+		write(STDOUT_FILENO, "Usage: ./pipex file1 cmd1 cmd2 file2\n", 38);
 		exit(EXIT_SUCCESS);
 	}
-	f1 = open(argv[1], O_RDONLY);
-	f2 = open(argv[4], O_WRONLY);
-	if (f1 < 0 || f2 < 0)
+}
+
+void	openfd(int origfd[2], int pipefd[2], char *argv[])
+{
+	origfd[0] = open(argv[1], O_RDONLY);
+	origfd[1] = open(argv[4], O_WRONLY);
+	if (origfd[0] < 0 || origfd[1] < 0)
 	{
 		perror("");
-		exit(EXIT_SUCCESS);
+		exit(EXIT_FAILURE);
 	}
-	ft_bzero(buf, 1000);
-	pipe(pipefd);
-	forkpid = fork();
-	if (forkpid < 0)
+	if (pipe(pipefd) == -1)
 	{
-		perror("fork error");
+		perror("");
+		exit(EXIT_FAILURE);
 	}
-	else if (forkpid == 0)	// child
+}
+
+void	child_func(int pipefd[2], int f1)
+{
+	char	*args[] = {"cat", "infile", NULL};
+
+	f1 = f1 + 0;
+	close(pipefd[0]);
+	dup2(pipefd[1], STDOUT_FILENO);
+	execve("/bin/cat", args, NULL);
+	close(pipefd[1]);
+	exit(EXIT_SUCCESS);
+}
+
+void	parent_func(int pipefd[2], int f2, int child)
+{
+	static char	buf[10000] = {0};
+
+	f2 = f2 + 0;
+	close(pipefd[1]);
+	waitpid(-1, &child, 0);
+	read(pipefd[0], buf, 10000);
+	write(f2, buf, ft_strlen(buf));
+	close(pipefd[0]);
+}
+
+int	main(int argc, char *argv[])
+{
+	int	pipefd[2];
+	int	origfd[2];
+	int	pidstat;
+
+	check_args(argc);
+	openfd(origfd, pipefd, argv);
+	pidstat = fork();
+	if (pidstat < 0)
 	{
-		close(pipefd[0]);
-		read(f1, buf, 1000);
-		write(pipefd[1], buf, 1000);
-		close(pipefd[1]);
+		perror("");
+		exit(EXIT_FAILURE);
 	}
-	else	// parent
-	{
-		close(pipefd[1]);
-		wait(&forkpid);
-		read(pipefd[0], buf, 1000);
-		write(f2, buf, ft_strlen(buf));
-		close(pipefd[0]);
-	}
+	else if (pidstat == 0)
+		child_func(pipefd, origfd[0]);
+	else
+		parent_func(pipefd, origfd[1], pidstat);
+	return (0);
 }

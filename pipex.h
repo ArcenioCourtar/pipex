@@ -6,7 +6,11 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:35 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/14 17:01:37 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/20 14:48:36 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PIPEX_H
+# define PIPEX_H
+
+#endif
