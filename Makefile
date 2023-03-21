@@ -12,7 +12,7 @@
 
 CC			:=	cc
 LIBFT		:=	libft/libft.a
-CFLAGS		:=	-Wall -Werror -Wextra
+CFLAGS		:=	# -Wall -Werror -Wextra
 NAME		:=	pipex
 OBJFILES	:=	main.o
 HEADERFILE	:=	pipex.h

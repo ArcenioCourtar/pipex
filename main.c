@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "libft/libft.h"
+#include "libft/get_next_line.h"
 #include "pipex.h"
 #include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
 #include <fcntl.h>		// open()
 #include <stdlib.h>		// exit()
 #include <sys/wait.h>	// wait()
-#include <stdio.h>		// printf(), perror()
+#include <stdio.h>		// printf(), perror(), environ
 
 void	check_args(int argc)
 {
@@ -72,12 +73,29 @@ void	parent_func(int pipefd[2], int f2, int child)
 	exit(EXIT_FAILURE);
 }
 
+void	find_pathvar(void)
+{
+	int		i;
+	char	path[6];
+
+	ft_strlcpy(path, "PATH=", 6);
+	i = 0;
+	while (__environ[i] != NULL)
+	{
+		if (ft_strncmp(__environ[i], path, 5) == 0)
+			break ;
+		i++;
+	}
+	ft_printf("%s\n", __environ[i]);
+}
+
 int	main(int argc, char *argv[])
 {
-	int	pipefd[2];
-	int	origfd[2];
-	int	pidstat;
+	int		pipefd[2];
+	int		origfd[2];
+	int		pidstat;
 
+	find_pathvar();
 	check_args(argc);
 	openfd(origfd, pipefd, argv);
 	pidstat = fork();
