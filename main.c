@@ -27,6 +27,8 @@ void	check_args(int argc)
 	}
 }
 
+// TODO: if outfile does not currently exist, create it instead of
+// printing errmsg
 void	openfd(int origfd[2], int pipefd[2], char *argv[])
 {
 	origfd[0] = open(argv[1], O_RDONLY);
@@ -45,26 +47,29 @@ void	openfd(int origfd[2], int pipefd[2], char *argv[])
 
 void	child_func(int pipefd[2], int f1)
 {
-	char	*args[] = {"cat", "infile", NULL};
+	char	*args[] = {"cat", NULL};
 
-	f1 = f1 + 0;
 	close(pipefd[0]);
+	dup2(f1, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
-	execve("/bin/cat", args, NULL);
 	close(pipefd[1]);
-	exit(EXIT_SUCCESS);
+	execve("/bin/cat", args, NULL);
+	perror("");
+	exit(EXIT_FAILURE);
 }
 
 void	parent_func(int pipefd[2], int f2, int child)
 {
-	static char	buf[10000] = {0};
+	char	*args[] = {"/bin/ls", "-l", NULL};
 
-	f2 = f2 + 0;
-	close(pipefd[1]);
 	waitpid(-1, &child, 0);
-	read(pipefd[0], buf, 10000);
-	write(f2, buf, ft_strlen(buf));
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	dup2(f2, STDOUT_FILENO);
 	close(pipefd[0]);
+	execve("/bin/ls", args, NULL);
+	perror("");
+	exit(EXIT_FAILURE);
 }
 
 int	main(int argc, char *argv[])
