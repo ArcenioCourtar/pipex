@@ -77,6 +77,7 @@ void	find_pathvar(void)
 {
 	int		i;
 	char	path[6];
+	char	**test;
 
 	ft_strlcpy(path, "PATH=", 6);
 	i = 0;
@@ -86,7 +87,15 @@ void	find_pathvar(void)
 			break ;
 		i++;
 	}
-	ft_printf("%s\n", __environ[i]);
+	test = ft_split(__environ[i], ':');
+	i = 0;
+	while (test[i] != NULL)
+	{
+		ft_printf("%s\n", test[i]);
+		free(test[i]);
+		i++;
+	}
+	free(test);
 }
 
 int	main(int argc, char *argv[])

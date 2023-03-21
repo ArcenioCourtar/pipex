@@ -15,7 +15,7 @@
 
 static int	section_counter(char const *s, char c);
 static int	write_sections(char const *s, char c, char **array);
-static char	*fill_array(char const *start, char const *end, int *i);
+static char	*fill_array(char const *start, char const *end);
 static int	free_mem(char **array);
 
 // Split string 's' using char 'c' as delimiter character.
@@ -71,33 +71,32 @@ static int	write_sections(char const *s, char c, char **array)
 	int			i;
 
 	start = s;
-	i = -1;
+	i = 0;
 	while (*s != '\0')
 	{
 		if (*s == c)
 		{
 			if (start < s)
-				array[i] = fill_array(start, s, &i);
+				array[i++] = fill_array(start, s);
 			start = s + 1;
-			if (i >= 0 && array[i] == NULL)
+			if (i > 0 && array[i - 1] == NULL)
 				return (free_mem(array));
 		}
 		s++;
 	}
 	if (start < s)
-		array[i] = fill_array(start, s, &i);
-	if (i >= 0 && array[i] == NULL)
+		array[i++] = fill_array(start, s);
+	if (i > 0 && array[i - 1] == NULL)
 		return (free_mem(array));
 	return (1);
 }
 
 // Allocate space and write part of the string using ft_substr().
 // Malloc protection is inside of ft_substr();
-static char	*fill_array(char const *start, char const *end, int *i)
+static char	*fill_array(char const *start, char const *end)
 {
 	char	*str;
 
-	*i += 1;
 	str = ft_substr(start, 0, end - start);
 	return (str);
 }
@@ -106,6 +105,7 @@ static char	*fill_array(char const *start, char const *end, int *i)
 // malloc() in fill_array() has failed.
 static int	free_mem(char **array)
 {
+	ft_printf("oops");
 	int	i;
 
 	i = 0;
