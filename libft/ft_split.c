@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 12:42:07 by acourtar          #+#    #+#             */
-/*   Updated: 2022/11/22 15:22:20 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:48:57 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ static char	*fill_array(char const *start, char const *end)
 // malloc() in fill_array() has failed.
 static int	free_mem(char **array)
 {
-	ft_printf("oops");
 	int	i;
 
 	i = 0;

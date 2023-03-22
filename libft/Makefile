@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/14 17:00:26 by acourtar          #+#    #+#              #
-#    Updated: 2023/03/14 17:00:32 by acourtar         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 CC			:= cc
 NAME		:= libft.a
 OBJFILES	:= \
@@ -60,10 +48,8 @@ OBJBONUS	:= \
 OBJAFTER	:= \
 	ft_isspace.o \
 	ft_atol.o \
-	ft_printf.o \
-	get_next_line.o \
-	get_next_line_utils.o
-HEADERFILE	:= libft.h get_next_line.h
+	ft_printf.o
+HEADERFILE	:= libft.h
 CFLAGS		:= -Wall -Werror -Wextra
 
 # The files in OBJAFTER were added after libft's completion.
