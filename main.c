@@ -6,12 +6,11 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:20 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/20 18:39:53 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/22 20:07:47 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include "libft/get_next_line.h"
 #include "pipex.h"
 #include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
 #include <fcntl.h>		// open()
@@ -46,66 +45,134 @@ void	openfd(int origfd[2], int pipefd[2], char *argv[])
 	}
 }
 
-void	child_func(int pipefd[2], int f1)
+void	create_path(char *goal, char *dir, char *file)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(dir);
+	ft_memcpy(goal, dir, len);
+	i = len;
+	goal[i] = '/';
+	len = ft_strlen(file);
+	ft_memcpy(goal + i + 1, file, len);
+	goal[i + len + 1] = '\0';
+}
+
+// TODO: check behavior if first exec is not found vs 2nd exec is not found
+void	child_func(int pipefd[2], int f1, t_data *data)
 {
 	char	*args[] = {"cat", NULL};
+	int		i;
+	char	*goaldir;
 
+	i = 0;
 	close(pipefd[0]);
+	ft_printf("child\n");
 	dup2(f1, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[1]);
-	execve("/bin/cat", args, NULL);
+	goaldir = malloc(data->maxpathlen);
+	// protection
+	while (data->pathdir[i] != NULL)
+	{
+		create_path(goaldir, data->pathdir[i], data->argv[2]);
+		execve(goaldir, args, data->envp);
+		i++;
+	}
 	perror("");
 	exit(EXIT_FAILURE);
 }
 
-void	parent_func(int pipefd[2], int f2, int child)
+void	parent_func(int pipefd[2], int f2, int child, t_data *data)
 {
-	char	*args[] = {"/bin/ls", "-l", NULL};
+	char	*args[] = {"cat", NULL};
+	int		i;
+	char	*goaldir;
 
+	i = 0;
 	waitpid(-1, &child, 0);
+	ft_printf("parent\n");
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	dup2(f2, STDOUT_FILENO);
-	close(pipefd[0]);
-	execve("/bin/ls", args, NULL);
+	goaldir = malloc(data->maxpathlen);
+	// protection
+	while (data->pathdir[i] != NULL)
+	{
+		create_path(goaldir, data->pathdir[i], data->argv[3]);
+		execve(goaldir, args, NULL);
+		i++;
+	}
 	perror("");
 	exit(EXIT_FAILURE);
 }
 
-void	find_pathvar(void)
+char	**find_pathvar(char *envp[])
 {
 	int		i;
 	char	path[6];
-	char	**test;
+	char	**path_arr;
 
 	ft_strlcpy(path, "PATH=", 6);
 	i = 0;
-	while (__environ[i] != NULL)
+	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(__environ[i], path, 5) == 0)
+		if (ft_strncmp(envp[i], path, 5) == 0)
 			break ;
 		i++;
 	}
-	test = ft_split(__environ[i], ':');
-	i = 0;
-	while (test[i] != NULL)
-	{
-		ft_printf("%s\n", test[i]);
-		free(test[i]);
-		i++;
-	}
-	free(test);
+	path_arr = ft_split(envp[i], ':');
+	// Protection?
+	ft_memmove(path_arr[0], path_arr[0] + 5, ft_strlen(path_arr[0]) - 4);
+	return (path_arr);
 }
 
-int	main(int argc, char *argv[])
+int	find_pathlen(char **argv, char **pathdir)
+{
+	int	arglen;
+	int	pathlen;
+	int	i;
+
+	i = 0;
+	arglen = ft_strlen(argv[2]);
+	if (arglen < ft_strlen(argv[3]))
+		arglen = ft_strlen(argv[3]);
+	pathlen = ft_strlen(pathdir[i]);
+	i++;
+	while (pathdir[i] != NULL)
+	{
+		if (pathlen < ft_strlen(pathdir[i]))
+			pathlen = ft_strlen(pathdir[i]);
+		i++;
+	}
+	return (arglen + pathlen + 2);
+}
+
+t_data	*build_struct(char **argv, char **envp)
+{
+	t_data	*new;
+
+	new = malloc(sizeof(t_data));
+	// protection
+	new->argv = argv;
+	new->envp = envp;
+	new->pathdir = find_pathvar(envp);
+	// protection
+	new->maxpathlen = find_pathlen(argv, new->pathdir);
+	return (new);
+}
+
+int	main(int argc, char *argv[], char *envp[])
 {
 	int		pipefd[2];
 	int		origfd[2];
 	int		pidstat;
+	t_data	*data;
 
-	find_pathvar();
 	check_args(argc);
+	data = build_struct(argv, envp);
+	// protection
 	openfd(origfd, pipefd, argv);
 	pidstat = fork();
 	if (pidstat < 0)
@@ -114,8 +181,8 @@ int	main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	else if (pidstat == 0)
-		child_func(pipefd, origfd[0]);
+		child_func(pipefd, origfd[0], data);
 	else
-		parent_func(pipefd, origfd[1], pidstat);
+		parent_func(pipefd, origfd[1], pidstat, data);
 	return (0);
 }
