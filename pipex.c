@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:20 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 15:45:29 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/25 19:48:20 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/wait.h>	// wait()
 #include <stdio.h>		// printf(), perror()
 
+// Checks if the 4 additional args are present. If not, exit().
 static void	check_args(int argc)
 {
 	if (argc != 5)
@@ -27,6 +28,16 @@ static void	check_args(int argc)
 	}
 }
 
+/*
+Main function:
+
+First counts the # of arguments.
+Then set up the struct that contains the data pertaining the files, 
+shell commands, and environment variables.
+Sets up file descriptors.
+Finally forks if necessary (does not fork if the input file is not found).
+Perform some pipe magic.
+*/
 int	main(int argc, char *argv[], char *envp[])
 {
 	int		pipefd[2];
@@ -37,8 +48,10 @@ int	main(int argc, char *argv[], char *envp[])
 	check_args(argc);
 	data = build_struct(argv, envp);
 	// protection
-	openfd(origfd, pipefd, data);
-	pidstat = fork();
+	if (openfd(origfd, pipefd, data) == 1)
+		pidstat = fork();
+	else
+		pidstat = 1;
 	if (pidstat < 0)
 	{
 		perror("");

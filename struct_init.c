@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 14:46:31 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 14:51:48 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/25 19:53:34 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <sys/wait.h>	// wait()
 #include <stdio.h>		// printf(), perror()
 
+// Finds the $PATH variable in the environment, 
+// then puts all the possible PATHs in a list using ft_split
 static char	**find_pathvar(char *envp[])
 {
 	int		i;
@@ -38,6 +40,8 @@ static char	**find_pathvar(char *envp[])
 	return (path_arr);
 }
 
+// Calculates the amount of memory necessary for the longest combination of
+// a $PATH value and the used shell command, by adding the lengths together.
 static int	find_pathlen(char **argv, char **pathdir)
 {
 	int	arglen;
@@ -59,14 +63,18 @@ static int	find_pathlen(char **argv, char **pathdir)
 	return (arglen + pathlen + 2);
 }
 
+// ft_split for any additional arguments being passed to execve
 static char	**find_execargs(char *argv)
 {
 	char	**arg_arr;
 
 	arg_arr = ft_split(argv, ' ');
+	// protec?
 	return (arg_arr);
 }
 
+// Set up the struct that contains all the data we need for the following
+// functions.
 t_data	*build_struct(char **argv, char **envp)
 {
 	t_data	*new;

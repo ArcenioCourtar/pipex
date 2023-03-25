@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 14:41:01 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 14:41:13 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/25 20:00:14 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/wait.h>	// wait()
 #include <stdio.h>		// printf(), perror()
 
-// TODO: check behavior if first exec is not found vs 2nd exec is not found
+// Child function.
 void	child_func(int pipefd[2], int f1, t_data *data)
 {
 	int		i;
@@ -26,7 +26,6 @@ void	child_func(int pipefd[2], int f1, t_data *data)
 
 	i = 0;
 	close(pipefd[0]);
-	ft_printf("child\n");
 	dup2(f1, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
 	goaldir = malloc(data->maxpathlen);
@@ -41,6 +40,9 @@ void	child_func(int pipefd[2], int f1, t_data *data)
 	exit(EXIT_FAILURE);
 }
 
+// Parent function.
+// If the child is not created prior to the waitpid() call it's a no-op.
+// Allowing this function to work on it's own if the input file is not found.
 void	parent_func(int pipefd[2], int f2, int child, t_data *data)
 {
 	int		i;
@@ -48,7 +50,6 @@ void	parent_func(int pipefd[2], int f2, int child, t_data *data)
 
 	i = 0;
 	waitpid(-1, &child, 0);
-	ft_printf("parent\n");
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	dup2(f2, STDOUT_FILENO);
