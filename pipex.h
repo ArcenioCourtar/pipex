@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:35 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 14:47:00 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/25 15:45:07 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_data
 
 void	parent_func(int pipefd[2], int f2, int child, t_data *data);
 void	child_func(int pipefd[2], int f1, t_data *data);
-void	openfd(int origfd[2], int pipefd[2], char *argv[]);
+void	openfd(int origfd[2], int pipefd[2], t_data *data);
 void	create_path(char *goal, char *dir, char *file);
 t_data	*build_struct(char **argv, char **envp);
 

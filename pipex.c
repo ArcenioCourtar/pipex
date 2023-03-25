@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:20 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 14:46:46 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/25 15:45:29 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char *argv[], char *envp[])
 	check_args(argc);
 	data = build_struct(argv, envp);
 	// protection
-	openfd(origfd, pipefd, argv);
+	openfd(origfd, pipefd, data);
 	pidstat = fork();
 	if (pidstat < 0)
 	{
