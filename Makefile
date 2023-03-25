@@ -6,7 +6,7 @@
 #    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/12 16:43:02 by acourtar          #+#    #+#              #
-#    Updated: 2023/03/22 17:46:39 by acourtar         ###   ########.fr        #
+#    Updated: 2023/03/25 14:53:35 by acourtar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,10 @@ CC			:=	cc
 LIBFT		:=	libft/libft.a
 CFLAGS		:=	# -Wall -Werror -Wextra
 NAME		:=	pipex
-OBJFILES	:=	main.o
+OBJFILES	:=	pipex.o \
+			input_parsing.o \
+			child_parent.o \
+			struct_init.o
 HEADERFILE	:=	pipex.h
 
 all: $(NAME)
@@ -37,6 +40,10 @@ ft_%.o: ft_%.c $(HEADERFILE)
 
 $(LIBFT):
 	$(MAKE) -C libft
+
+noclutter:
+	$(MAKE)
+	$(MAKE) clean
 
 fsanitize: $(NAME)
 	$(CC) $(CFLAGS) $(OBJFILES) $(LIBFT) -fsanitize=address -o $(NAME)
