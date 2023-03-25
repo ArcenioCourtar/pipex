@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:20 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/22 20:07:47 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/25 13:48:04 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	create_path(char *goal, char *dir, char *file)
 // TODO: check behavior if first exec is not found vs 2nd exec is not found
 void	child_func(int pipefd[2], int f1, t_data *data)
 {
-	char	*args[] = {"cat", NULL};
 	int		i;
 	char	*goaldir;
 
@@ -76,8 +75,8 @@ void	child_func(int pipefd[2], int f1, t_data *data)
 	// protection
 	while (data->pathdir[i] != NULL)
 	{
-		create_path(goaldir, data->pathdir[i], data->argv[2]);
-		execve(goaldir, args, data->envp);
+		create_path(goaldir, data->pathdir[i], data->execargs1[0]);
+		execve(goaldir, data->execargs1, data->envp);
 		i++;
 	}
 	perror("");
@@ -86,7 +85,6 @@ void	child_func(int pipefd[2], int f1, t_data *data)
 
 void	parent_func(int pipefd[2], int f2, int child, t_data *data)
 {
-	char	*args[] = {"cat", NULL};
 	int		i;
 	char	*goaldir;
 
@@ -100,8 +98,8 @@ void	parent_func(int pipefd[2], int f2, int child, t_data *data)
 	// protection
 	while (data->pathdir[i] != NULL)
 	{
-		create_path(goaldir, data->pathdir[i], data->argv[3]);
-		execve(goaldir, args, NULL);
+		create_path(goaldir, data->pathdir[i], data->execargs2[0]);
+		execve(goaldir, data->execargs2, data->envp);
 		i++;
 	}
 	perror("");
@@ -149,6 +147,14 @@ int	find_pathlen(char **argv, char **pathdir)
 	return (arglen + pathlen + 2);
 }
 
+char	**find_execargs(char *argv)
+{
+	char	**arg_arr;
+
+	arg_arr = ft_split(argv, ' ');
+	return (arg_arr);
+}
+
 t_data	*build_struct(char **argv, char **envp)
 {
 	t_data	*new;
@@ -158,6 +164,8 @@ t_data	*build_struct(char **argv, char **envp)
 	new->argv = argv;
 	new->envp = envp;
 	new->pathdir = find_pathvar(envp);
+	new->execargs1 = find_execargs(argv[2]);
+	new->execargs2 = find_execargs(argv[3]);
 	// protection
 	new->maxpathlen = find_pathlen(argv, new->pathdir);
 	return (new);
