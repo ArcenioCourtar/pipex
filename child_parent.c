@@ -6,13 +6,13 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 14:41:01 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 20:00:14 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/26 15:08:21 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "pipex.h"
-#include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
+#include <unistd.h>		// pipe(), close(), read(), execve(), dup2(), access()
 #include <fcntl.h>		// open()
 #include <stdlib.h>		// exit()
 #include <sys/wait.h>	// wait()
@@ -28,8 +28,10 @@ void	child_func(int pipefd[2], int f1, t_data *data)
 	close(pipefd[0]);
 	dup2(f1, STDIN_FILENO);
 	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[1]);
 	goaldir = malloc(data->maxpathlen);
-	// protection
+	if (goaldir == NULL)
+		exit_func(NULL, NULL);
 	while (data->pathdir[i] != NULL)
 	{
 		create_path(goaldir, data->pathdir[i], data->execargs1[0]);
@@ -53,8 +55,10 @@ void	parent_func(int pipefd[2], int f2, int child, t_data *data)
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	dup2(f2, STDOUT_FILENO);
+	close(pipefd[0]);
 	goaldir = malloc(data->maxpathlen);
-	// protection
+	if (goaldir == NULL)
+		exit_func(NULL, NULL);
 	while (data->pathdir[i] != NULL)
 	{
 		create_path(goaldir, data->pathdir[i], data->execargs2[0]);

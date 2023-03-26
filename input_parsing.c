@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 14:38:12 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 19:58:42 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/26 15:24:17 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdlib.h>		// exit()
 #include <sys/wait.h>	// wait()
 #include <stdio.h>		// printf(), perror()
+#include <errno.h>		// errors
 
 // creates full pathnames to the file we're looking for by 
 // copying the contents of dir and file into the previously allocated
@@ -50,13 +51,22 @@ char	**create_touch_args(t_data *data)
 
 	i = 0;
 	new = malloc(sizeof(char *) * 3);
-	// protection
+	if (new == NULL)
+		exit_func(NULL, NULL);
 	new[0] = ft_strdup("touch");
-	// proteins
+	if (new[0] == NULL)
+		exit_func(NULL, NULL);
 	new[1] = ft_strdup(data->argv[4]);
-	// Protoss
+	if (new[1] == NULL)
+		exit_func(NULL, NULL);
 	new[2] = NULL;
 	return (new);
+}
+
+void	open_checkacc(int origfd[2], t_data *data)
+{
+	origfd[0] = open(data->argv[1], O_RDONLY);
+	origfd[1] = open(data->argv[4], O_WRONLY);
 }
 
 // TODO: use $PATH to construct goal directory?
@@ -69,8 +79,7 @@ int	openfd(int origfd[2], int pipefd[2], t_data *data)
 	int		touchpid;
 	char	**touchargs;
 
-	origfd[0] = open(data->argv[1], O_RDONLY);
-	origfd[1] = open(data->argv[4], O_WRONLY);
+	open_checkacc(origfd, data);
 	if (pipe(pipefd) == -1)
 	{
 		perror("");

@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:20 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 19:48:20 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/26 14:34:08 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ static void	check_args(int argc)
 	}
 }
 
+void	exit_func(t_data *data, char **arr)
+{
+	exit(EXIT_FAILURE);
+}
+
 /*
 Main function:
 
@@ -47,7 +52,6 @@ int	main(int argc, char *argv[], char *envp[])
 
 	check_args(argc);
 	data = build_struct(argv, envp);
-	// protection
 	if (openfd(origfd, pipefd, data) == 1)
 		pidstat = fork();
 	else

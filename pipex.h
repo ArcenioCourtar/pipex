@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 17:01:35 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 19:40:24 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/26 13:56:09 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ void	child_func(int pipefd[2], int f1, t_data *data);
 int		openfd(int origfd[2], int pipefd[2], t_data *data);
 void	create_path(char *goal, char *dir, char *file);
 t_data	*build_struct(char **argv, char **envp);
+void	exit_func(t_data *data, char **arr);
 
 #endif

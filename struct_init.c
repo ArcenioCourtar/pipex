@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 14:46:31 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/25 19:53:34 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/26 14:01:42 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static char	**find_pathvar(char *envp[])
 		i++;
 	}
 	path_arr = ft_split(envp[i], ':');
-	// Protection?
+	if (path_arr == NULL)
+		return (NULL);
 	ft_memmove(path_arr[0], path_arr[0] + 5, ft_strlen(path_arr[0]) - 4);
 	return (path_arr);
 }
@@ -69,7 +70,8 @@ static char	**find_execargs(char *argv)
 	char	**arg_arr;
 
 	arg_arr = ft_split(argv, ' ');
-	// protec?
+	if (arg_arr == NULL)
+		return (NULL);
 	return (arg_arr);
 }
 
@@ -80,13 +82,19 @@ t_data	*build_struct(char **argv, char **envp)
 	t_data	*new;
 
 	new = malloc(sizeof(t_data));
-	// protection
+	if (new == NULL)
+		exit_func(NULL, NULL);
 	new->argv = argv;
 	new->envp = envp;
 	new->pathdir = find_pathvar(envp);
+	if (new->pathdir == NULL)
+		exit_func(NULL, NULL);
 	new->execargs1 = find_execargs(argv[2]);
+	if (new->execargs1 == NULL)
+		exit_func(NULL, NULL);
 	new->execargs2 = find_execargs(argv[3]);
-	// protection
+	if (new->execargs2 == NULL)
+		exit_func(NULL, NULL);
 	new->maxpathlen = find_pathlen(argv, new->pathdir);
 	return (new);
 }
