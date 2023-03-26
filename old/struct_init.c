@@ -6,11 +6,11 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/25 14:46:31 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/26 14:01:42 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/26 18:16:19 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
+#include "../libft/libft.h"
 #include "pipex.h"
 #include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
 #include <fcntl.h>		// open()

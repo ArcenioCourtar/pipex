@@ -6,15 +6,18 @@
 #    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/12 16:43:02 by acourtar          #+#    #+#              #
-#    Updated: 2023/03/26 18:14:02 by acourtar         ###   ########.fr        #
+#    Updated: 2023/03/26 18:17:11 by acourtar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC			:=	cc
-LIBFT		:=	libft/libft.a
+LIBFT		:=	../libft/libft.a
 CFLAGS		:=	# -Wall -Werror -Wextra
 NAME		:=	pipex
-OBJFILES	:=	pipex.o
+OBJFILES	:=	pipex.o \
+			input_parsing.o \
+			child_parent.o \
+			struct_init.o
 HEADERFILE	:=	pipex.h
 
 all: $(NAME)
@@ -25,18 +28,18 @@ $(NAME): $(LIBFT) $(OBJFILES)
 re: fclean all
 
 clean:
-	$(MAKE) clean -C libft
+	$(MAKE) clean -C ../libft
 	rm -f $(OBJFILES)
 
 fclean:
-	$(MAKE) fclean -C libft
+	$(MAKE) fclean -C ../libft
 	rm -f $(OBJFILES) $(NAME)
 
 ft_%.o: ft_%.c $(HEADERFILE)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 $(LIBFT):
-	$(MAKE) -C libft
+	$(MAKE) -C ../libft
 
 noclutter:
 	$(MAKE)
