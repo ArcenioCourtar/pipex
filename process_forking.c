@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:36:02 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 16:47:36 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:16:17 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	child_process(int f1, int pipefd[2], t_data *data)
 		execve(goaldir, data->execargs1, data->envp);
 		i++;
 	}
-	perror("");
+	ft_printf_err("%s: %s: command not found\n", data->argv[0], data->argv[2]);
 	exit(EXIT_FAILURE);
 }
 
@@ -87,7 +87,7 @@ static void	parent_process(int f2, int pipefd[2], int childpid, t_data *data)
 		execve(goaldir, data->execargs2, data->envp);
 		i++;
 	}
-	perror("");
+	ft_printf_err("%s: %s: command not found\n", data->argv[0], data->argv[3]);
 	exit(EXIT_FAILURE);
 }
 

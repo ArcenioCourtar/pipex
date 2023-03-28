@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:45:57 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 16:46:58 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:19:16 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,13 @@ void	fd_setup(int origfd[2], int pipefd[2], t_data *data)
 {
 	pipe(pipefd);
 	if (data->err[0] != 0)
-		ft_printf("Infile: %s\n", strerror(data->err[0]));
+		ft_printf_err("%s: %s: %s\n", data->argv[0], data->argv[1], \
+		strerror(data->err[0]));
 	else
 		origfd[0] = open(data->argv[1], O_RDONLY);
 	if (data->err[1] == EACCES)
-		ft_printf("Outfile: %s\n", strerror(data->err[1]));
+		ft_printf_err("%s: %s: %s\n", data->argv[0], data->argv[4], \
+		strerror(data->err[1]));
 	else if (data->err[1] == ENOENT)
 	{
 		origfd[1] = open(data->argv[4], O_CREAT | O_WRONLY | O_TRUNC, \

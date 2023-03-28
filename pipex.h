@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:14 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 16:47:51 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:10:32 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@ typedef struct s_data
 void	exit_func(void);
 t_data	*build_struct(char **argv, char **envp);
 void	cmd_exec(int origfd[2], int pipefd[2], t_data *data);
+void	access_open(t_data *data);
+void	fd_setup(int origfd[2], int pipefd[2], t_data *data);
 
 #endif

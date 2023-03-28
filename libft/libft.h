@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:15:15 by acourtar          #+#    #+#             */
-/*   Updated: 2023/02/07 16:11:50 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:09:34 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_atoi(const char *nptr);
 // My 42 version of printf
 int		ft_printf(const char *str, ...);
+// Mirror functionality from printf, but prints on stderr.
+int		ft_printf_err(const char *str, ...);
 // Convert initial portion of string to a long
 long	ft_atol(const char *str);
 

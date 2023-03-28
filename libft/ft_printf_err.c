@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_printf_err.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 09:34:26 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 17:05:17 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/28 17:11:35 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ static int	select_conversion(va_list args, char c);
 static int	numlen_calc(long i);
 static int	num_conversion(uintptr_t i, char c, int base, int called);
 
-// Mirror functionality from printf.
-// Minus the hard stuff. xd
-int	ft_printf(const char *str, ...)
+// Mirror functionality from printf, but prints on stderr.
+int	ft_printf_err(const char *str, ...)
 {
 	va_list	args;
 	int		len;
@@ -34,13 +33,13 @@ int	ft_printf(const char *str, ...)
 		if (str[0] == '%' && str[1] != '\0')
 		{
 			if (str[1] == '%')
-				ft_putchar_fd('%', STDOUT_FILENO);
+				ft_putchar_fd('%', STDERR_FILENO);
 			else
 				len += select_conversion(args, str[1]) - 1;
 			str++;
 		}
 		else
-			ft_putchar_fd(*str, STDOUT_FILENO);
+			ft_putchar_fd(*str, STDERR_FILENO);
 		len++;
 		str++;
 	}
@@ -59,10 +58,10 @@ static int	select_conversion(va_list args, char c)
 		str = va_arg(args, char *);
 		if (str == NULL)
 		{
-			ft_putstr_fd("(null)", STDOUT_FILENO);
+			ft_putstr_fd("(null)", STDERR_FILENO);
 			return (6);
 		}
-		ft_putstr_fd(str, STDOUT_FILENO);
+		ft_putstr_fd(str, STDERR_FILENO);
 		return ((int)ft_strlen(str));
 	}
 	else if (c == 'i' || c == 'd')
@@ -74,7 +73,7 @@ static int	select_conversion(va_list args, char c)
 	else if (c == 'p')
 		return (num_conversion(va_arg(args, uintptr_t), c, 16, 0));
 	else if (c == 'c')
-		ft_putchar_fd(va_arg(args, int), STDOUT_FILENO);
+		ft_putchar_fd(va_arg(args, int), STDERR_FILENO);
 	return (1);
 }
 
@@ -84,7 +83,7 @@ static int	numlen_calc(long i)
 {
 	int	numlen;
 
-	ft_putnbr_fd(i, STDOUT_FILENO);
+	ft_putnbr_fd(i, STDERR_FILENO);
 	if (i == 0)
 		return (1);
 	if (i < 0)
@@ -112,12 +111,12 @@ static int	num_conversion(uintptr_t i, char c, int base, int called)
 	len = 0;
 	if (called == 0 && c == 'p')
 	{
-		ft_putstr_fd("0x", STDOUT_FILENO);
+		ft_putstr_fd("0x", STDERR_FILENO);
 		len += 2;
 	}
 	if (called == 0 && i == 0)
 	{
-		ft_putchar_fd('0', STDOUT_FILENO);
+		ft_putchar_fd('0', STDERR_FILENO);
 		return (len + 1);
 	}
 	if (c == 'X')
@@ -128,7 +127,7 @@ static int	num_conversion(uintptr_t i, char c, int base, int called)
 	{
 		len += num_conversion((i / base), c, base, 1);
 		len++;
-		ft_putchar_fd(hex_chars[i % base], STDOUT_FILENO);
+		ft_putchar_fd(hex_chars[i % base], STDERR_FILENO);
 	}
 	return (len);
 }
