@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:06 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/26 20:56:35 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/03/28 15:41:45 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ static int	find_pathlen(char **argv, char **pathdir)
 	int	i;
 
 	i = 0;
-	arglen = ft_strlen(argv[2]);
+	arglen = ft_strlen("touch");
+	if (arglen < ft_strlen(argv[2]))
+		arglen = ft_strlen(argv[2]);
 	if (arglen < ft_strlen(argv[3]))
 		arglen = ft_strlen(argv[3]);
 	pathlen = ft_strlen(pathdir[i]);
@@ -111,10 +113,7 @@ t_data	*build_struct(char **argv, char **envp)
 void	check_args(int argc)
 {
 	if (argc != 5)
-	{
-		ft_printf("Usage: file1 cmd1 cmd2 file2\n");
-		exit(EXIT_SUCCESS);
-	}
+		exit(EXIT_FAILURE);
 }
 
 void	access_open(t_data *data)
@@ -129,6 +128,30 @@ void	access_open(t_data *data)
 		data->err[1] = errno;
 }
 
+// creates full pathnames to the file we're looking for by 
+// copying the contents of dir and file into the previously allocated
+// memory of goal.
+// If the user specified a full path, just check that instead.
+void	create_path(char *goal, char *dir, char *file)
+{
+	int	i;
+	int	len;
+
+	if (ft_strchr(file, '/') != NULL)
+	{
+		len = ft_strlen(file);
+		ft_memcpy(goal, file, len + 1);
+		return ;
+	}
+	i = 0;
+	len = ft_strlen(dir);
+	ft_memcpy(goal, dir, len);
+	i = len;
+	goal[i] = '/';
+	len = ft_strlen(file);
+	ft_memcpy(goal + i + 1, file, len + 1);
+}
+
 void	fd_setup(int origfd[2], int pipefd[2], t_data *data)
 {
 	pipe(pipefd);
@@ -140,11 +163,76 @@ void	fd_setup(int origfd[2], int pipefd[2], t_data *data)
 		ft_printf("Outfile: %s\n", strerror(data->err[1]));
 	else if (data->err[1] == ENOENT)
 	{
-		ft_printf("Outfile: %s\n", strerror(data->err[1]));
-		// Should not print error, instead silently create file
+		origfd[1] = open(data->argv[4], O_CREAT | O_WRONLY | O_TRUNC, \
+		S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		data->err[1] = 0;
 	}
 	else
-		origfd[1] = open(data->argv[4], O_WRONLY);
+		origfd[1] = open(data->argv[4], O_WRONLY | O_TRUNC);
+}
+
+void	child_process(int f1, int pipefd[2], t_data *data)
+{
+	int		i;
+	char	*goaldir;
+
+	close(pipefd[0]);
+	dup2(f1, STDIN_FILENO);
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[1]);
+	goaldir = malloc(data->maxpathlen);
+	if (goaldir == NULL)
+		exit_func();
+	i = 0;
+	while (data->pathdir[i] != NULL)
+	{
+		create_path(goaldir, data->pathdir[i], data->execargs1[0]);
+		execve(goaldir, data->execargs1, data->envp);
+		i++;
+	}
+	perror("");
+	exit(EXIT_FAILURE);
+}
+
+void	parent_process(int f2, int pipefd[2], int childpid, t_data *data)
+{
+	int		i;
+	char	*goaldir;
+
+	waitpid(-1, &childpid, 0);
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	dup2(f2, STDOUT_FILENO);
+	close(pipefd[0]);
+	goaldir = malloc(data->maxpathlen);
+	if (goaldir == NULL)
+		exit_func();
+	i = 0;
+	while (data->pathdir[i] != NULL)
+	{
+		create_path(goaldir, data->pathdir[i], data->execargs2[0]);
+		execve(goaldir, data->execargs2, data->envp);
+		i++;
+	}
+	perror("");
+	exit(EXIT_FAILURE);
+}
+
+void	cmd_exec(int origfd[2], int pipefd[2], t_data *data)
+{
+	int	forkpid;
+
+	if (data->err[0] == 0 && data->err[1] == 0)
+	{
+		forkpid = fork();
+		if (forkpid == 0)
+			child_process(origfd[0], pipefd, data);
+		parent_process(origfd[1], pipefd, forkpid, data);
+	}
+	else if (data->err[1] == 0)
+		parent_process(origfd[1], pipefd, forkpid, data);
+	else if (data->err[0] == 0)
+		child_process(origfd[0], pipefd, data);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -157,4 +245,5 @@ int	main(int argc, char **argv, char **envp)
 	data = build_struct(argv, envp);
 	access_open(data);
 	fd_setup(origfd, pipefd, data);
+	cmd_exec(origfd, pipefd, data);
 }
