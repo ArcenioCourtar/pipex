@@ -5,18 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/25 14:46:31 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/26 18:16:19 by acourtar         ###   ########.fr       */
+/*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
+/*   Updated: 2023/03/28 16:43:03 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft/libft.h"
+#include "libft/libft.h"
 #include "pipex.h"
+#include <string.h>		// strerror()
 #include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
 #include <fcntl.h>		// open()
 #include <stdlib.h>		// exit()
 #include <sys/wait.h>	// wait()
 #include <stdio.h>		// printf(), perror()
+#include <errno.h>		// errno
 
 // Finds the $PATH variable in the environment, 
 // then puts all the possible PATHs in a list using ft_split
@@ -50,7 +52,9 @@ static int	find_pathlen(char **argv, char **pathdir)
 	int	i;
 
 	i = 0;
-	arglen = ft_strlen(argv[2]);
+	arglen = ft_strlen("touch");
+	if (arglen < ft_strlen(argv[2]))
+		arglen = ft_strlen(argv[2]);
 	if (arglen < ft_strlen(argv[3]))
 		arglen = ft_strlen(argv[3]);
 	pathlen = ft_strlen(pathdir[i]);
@@ -83,18 +87,20 @@ t_data	*build_struct(char **argv, char **envp)
 
 	new = malloc(sizeof(t_data));
 	if (new == NULL)
-		exit_func(NULL, NULL);
+		exit_func();
 	new->argv = argv;
 	new->envp = envp;
 	new->pathdir = find_pathvar(envp);
 	if (new->pathdir == NULL)
-		exit_func(NULL, NULL);
+		exit_func();
 	new->execargs1 = find_execargs(argv[2]);
 	if (new->execargs1 == NULL)
-		exit_func(NULL, NULL);
+		exit_func();
 	new->execargs2 = find_execargs(argv[3]);
 	if (new->execargs2 == NULL)
-		exit_func(NULL, NULL);
+		exit_func();
 	new->maxpathlen = find_pathlen(argv, new->pathdir);
+	new->err[0] = 0;
+	new->err[1] = 0;
 	return (new);
 }

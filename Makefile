@@ -6,7 +6,7 @@
 #    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/12 16:43:02 by acourtar          #+#    #+#              #
-#    Updated: 2023/03/26 18:14:02 by acourtar         ###   ########.fr        #
+#    Updated: 2023/03/28 16:46:30 by acourtar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,10 @@ CC			:=	cc
 LIBFT		:=	libft/libft.a
 CFLAGS		:=	# -Wall -Werror -Wextra
 NAME		:=	pipex
-OBJFILES	:=	pipex.o
+OBJFILES	:=	pipex.o \
+			process_forking.o \
+			struct_init.o \
+			fd_init.o
 HEADERFILE	:=	pipex.h
 
 all: $(NAME)
