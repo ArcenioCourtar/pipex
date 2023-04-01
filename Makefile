@@ -6,13 +6,13 @@
 #    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/12 16:43:02 by acourtar          #+#    #+#              #
-#    Updated: 2023/03/28 16:46:30 by acourtar         ###   ########.fr        #
+#    Updated: 2023/04/01 15:47:14 by acourtar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC			:=	cc
 LIBFT		:=	libft/libft.a
-CFLAGS		:=	# -Wall -Werror -Wextra
+CFLAGS		:=	-Wall -Werror -Wextra
 NAME		:=	pipex
 OBJFILES	:=	pipex.o \
 			process_forking.o \
