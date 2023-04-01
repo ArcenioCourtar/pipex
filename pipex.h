@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:14 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 17:10:32 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/01 14:34:20 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_data
 	char	**execargs2;
 	char	**envp;
 	int		err[2];
+	int		pathav;
 	int		maxpathlen;
 }	t_data;
 

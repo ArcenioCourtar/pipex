@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 16:56:45 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:21:16 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 // Finds the $PATH variable in the environment, 
 // then puts all the possible PATHs in a list using ft_split
-static char	**find_pathvar(char *envp[])
+static char	**find_pathvar(char *envp[], int *pathavail)
 {
 	int		i;
 	char	path[6];
@@ -30,10 +30,17 @@ static char	**find_pathvar(char *envp[])
 
 	ft_strlcpy(path, "PATH=", 6);
 	i = 0;
-	while (envp[i] != NULL)
+	ft_printf("%s\n", envp[i]);
+	while (1)
 	{
-		if (ft_strncmp(envp[i], path, 5) == 0)
+		ft_printf("%s\n", envp[i]);
+		if (envp[i] != NULL && ft_strncmp(envp[i], path, 5) == 0)
 			break ;
+		if (envp[i] == NULL)
+		{
+			*pathavail = 0;
+			return (NULL);
+		}
 		i++;
 	}
 	path_arr = ft_split(envp[i], ':');
@@ -90,8 +97,9 @@ t_data	*build_struct(char **argv, char **envp)
 		exit_func();
 	new->argv = argv;
 	new->envp = envp;
-	new->pathdir = find_pathvar(envp);
-	if (new->pathdir == NULL)
+	new->pathav = 1;
+	new->pathdir = find_pathvar(envp, &(new->pathav));
+	if (new->pathdir == NULL && new->pathav == 1)
 		exit_func();
 	new->execargs1 = find_execargs(argv[2]);
 	if (new->execargs1 == NULL)
