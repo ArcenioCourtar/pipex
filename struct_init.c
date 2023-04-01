@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/01 15:21:16 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:51:21 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,8 @@ static char	**find_pathvar(char *envp[], int *pathavail)
 
 	ft_strlcpy(path, "PATH=", 6);
 	i = 0;
-	ft_printf("%s\n", envp[i]);
 	while (1)
 	{
-		ft_printf("%s\n", envp[i]);
 		if (envp[i] != NULL && ft_strncmp(envp[i], path, 5) == 0)
 			break ;
 		if (envp[i] == NULL)
@@ -54,25 +52,27 @@ static char	**find_pathvar(char *envp[], int *pathavail)
 // a $PATH value and the used shell command, by adding the lengths together.
 static int	find_pathlen(char **argv, char **pathdir)
 {
-	int	arglen;
-	int	pathlen;
-	int	i;
+	unsigned int	arglen;
+	unsigned int	pathlen;
+	int				i;
 
 	i = 0;
-	arglen = ft_strlen("touch");
-	if (arglen < ft_strlen(argv[2]))
-		arglen = ft_strlen(argv[2]);
+	pathlen = 0;
+	arglen = ft_strlen(argv[2]);
 	if (arglen < ft_strlen(argv[3]))
 		arglen = ft_strlen(argv[3]);
-	pathlen = ft_strlen(pathdir[i]);
-	i++;
-	while (pathdir[i] != NULL)
+	if (pathdir != NULL)
 	{
-		if (pathlen < ft_strlen(pathdir[i]))
-			pathlen = ft_strlen(pathdir[i]);
+		pathlen = ft_strlen(pathdir[i]);
 		i++;
+		while (pathdir[i] != NULL)
+		{
+			if (pathlen < ft_strlen(pathdir[i]))
+				pathlen = ft_strlen(pathdir[i]);
+			i++;
+		}
 	}
-	return (arglen + pathlen + 2);
+	return (arglen + pathlen + 1);
 }
 
 // ft_split for any additional arguments being passed to execve

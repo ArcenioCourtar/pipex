@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:36:02 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 18:16:17 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/01 15:57:39 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	create_path(char *goal, char *dir, char *file)
 	int	i;
 	int	len;
 
-	if (ft_strchr(file, '/') != NULL)
+	if (dir == NULL || ft_strchr(file, '/') != NULL)
 	{
 		len = ft_strlen(file);
 		ft_memcpy(goal, file, len + 1);
@@ -57,11 +57,16 @@ static void	child_process(int f1, int pipefd[2], t_data *data)
 	if (goaldir == NULL)
 		exit_func();
 	i = 0;
-	while (data->pathdir[i] != NULL)
+	while (data->pathdir != NULL && data->pathdir[i] != NULL)
 	{
 		create_path(goaldir, data->pathdir[i], data->execargs1[0]);
 		execve(goaldir, data->execargs1, data->envp);
 		i++;
+	}
+	if (data->pathav == 0)
+	{
+		create_path(goaldir, NULL, data->execargs1[0]);
+		execve(goaldir, data->execargs1, data->envp);
 	}
 	ft_printf_err("%s: %s: command not found\n", data->argv[0], data->argv[2]);
 	exit(EXIT_FAILURE);
@@ -81,11 +86,16 @@ static void	parent_process(int f2, int pipefd[2], int childpid, t_data *data)
 	if (goaldir == NULL)
 		exit_func();
 	i = 0;
-	while (data->pathdir[i] != NULL)
+	while (data->pathdir != NULL && data->pathdir[i] != NULL)
 	{
 		create_path(goaldir, data->pathdir[i], data->execargs2[0]);
 		execve(goaldir, data->execargs2, data->envp);
 		i++;
+	}
+	if (data->pathav == 0)
+	{
+		create_path(goaldir, NULL, data->execargs2[0]);
+		execve(goaldir, data->execargs2, data->envp);
 	}
 	ft_printf_err("%s: %s: command not found\n", data->argv[0], data->argv[3]);
 	exit(EXIT_FAILURE);
@@ -95,6 +105,7 @@ void	cmd_exec(int origfd[2], int pipefd[2], t_data *data)
 {
 	int	forkpid;
 
+	forkpid = 0;
 	if (data->err[0] == 0 && data->err[1] == 0)
 	{
 		forkpid = fork();
