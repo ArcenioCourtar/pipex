@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:06 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/28 16:45:30 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/01 16:57:38 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		origfd[2];
 	int		pipefd[2];
-	t_data	*data;	
+	t_data	*dat;	
 
 	check_args(argc);
-	data = build_struct(argv, envp);
-	access_open(data);
-	fd_setup(origfd, pipefd, data);
-	cmd_exec(origfd, pipefd, data);
+	dat = build_struct(argv, envp);
+	access_open(dat);
+	fd_setup(origfd, pipefd, dat);
+	cmd_exec(origfd, pipefd, dat);
 }
