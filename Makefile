@@ -6,7 +6,7 @@
 #    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/12 16:43:02 by acourtar          #+#    #+#              #
-#    Updated: 2023/04/05 12:46:06 by acourtar         ###   ########.fr        #
+#    Updated: 2023/04/05 16:54:37 by acourtar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ fclean:
 	$(MAKE) fclean -C libft
 	rm -f $(OBJFILES) $(NAME)
 
-ft_%.o: ft_%.c $(HEADERFILE)
+%.o: %.c $(HEADERFILE)
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 $(LIBFT):

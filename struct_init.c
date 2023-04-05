@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 13:25:46 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 19:11:31 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	find_pathlen(char **argv, char **pathdir)
 	return (arglen + pathlen + 1);
 }
 
-// ft_split for any additional arguments being passed to execve
+// ft_split for any additional arguments being passed to execve()
 static char	**find_execargs(char *argv)
 {
 	char	**arg_arr;
@@ -84,13 +84,8 @@ static char	**find_execargs(char *argv)
 
 // Set up the struct that contains all the data we need for the following
 // functions.
-t_data	*build_struct(char **argv, char **envp)
+void	build_struct(char **argv, char **envp, t_data *new)
 {
-	t_data	*new;
-
-	new = malloc(sizeof(t_data));
-	if (new == NULL)
-		err_exit();
 	new->argv = argv;
 	new->envp = envp;
 	new->pathav = 1;
@@ -106,5 +101,4 @@ t_data	*build_struct(char **argv, char **envp)
 	new->maxpathlen = find_pathlen(argv, new->pathdir);
 	new->err[0] = 0;
 	new->err[1] = 0;
-	return (new);
 }

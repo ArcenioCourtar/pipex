@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:36:02 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 13:57:05 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 19:08:39 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	child_in(int f1, int pipefd[2], t_data *dat)
 		err_exit();
 	build_path(goaldir, dat->execargs1, dat);
 	if (dat->pathav == -1)
-		ft_printf_err("%s: %s: No such file or directory", \
+		ft_printf_err("%s: %s: No such file or directory\n", \
 		dat->argv[0], dat->argv[2]);
 	else
 		ft_printf_err("%s: %s: command not found\n", \
@@ -57,7 +57,7 @@ static void	child_out(int f2, int pipefd[2], t_data *dat)
 		err_exit();
 	build_path(goaldir, dat->execargs2, dat);
 	if (dat->pathav == -1)
-		ft_printf_err("%s: %s: No such file or directory", \
+		ft_printf_err("%s: %s: No such file or directory\n", \
 		dat->argv[0], dat->argv[3]);
 	else
 		ft_printf_err("%s: %s: command not found\n", \

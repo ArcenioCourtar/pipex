@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:06 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 13:36:06 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 19:02:23 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ fork() this process and write/read through pipe.
 int	main(int argc, char **argv, char **envp)
 {
 	int		origfd[2];
-	t_data	*dat;	
+	t_data	dat;	
 
 	check_args(argc);
-	dat = build_struct(argv, envp);
-	access_open(dat);
-	fd_setup(origfd, dat);
-	cmd_exec(origfd, dat);
+	build_struct(argv, envp, &dat);
+	access_open(&dat);
+	fd_setup(origfd, &dat);
+	cmd_exec(origfd, &dat);
 	return (0);
 }

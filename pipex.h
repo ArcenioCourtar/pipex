@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:14 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 13:27:31 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 19:16:29 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,8 @@ typedef struct s_data
 	int		maxpathlen;
 }	t_data;
 
-// allocate memory and fill struct with the relevant data
-t_data	*build_struct(char **argv, char **envp);
-
+// fill struct with relevant data
+void	build_struct(char **argv, char **envp, t_data *new);
 // execute commands
 void	cmd_exec(int origfd[2], t_data *data);
 // check existence of specified file, and permissions
