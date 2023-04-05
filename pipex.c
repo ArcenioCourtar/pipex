@@ -6,20 +6,24 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:06 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 12:27:43 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:36:06 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "pipex.h"
-#include <string.h>		// strerror()
-#include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
-#include <fcntl.h>		// open()
-#include <stdlib.h>		// exit()
-#include <sys/wait.h>	// wait()
-#include <stdio.h>		// printf(), perror()
-#include <errno.h>		// errno
+#include <stdlib.h>	// exit()
+#include <stdio.h>	// perror()
+#include <errno.h>	// errno
 
+// Print error, and exit program after.
+void	err_exit(void)
+{
+	perror("");
+	exit(EXIT_FAILURE);
+}
+
+// Count # of arguments, if it's not the correct amount, print help message.
 void	check_args(int argc)
 {
 	if (argc != 5)
@@ -29,6 +33,14 @@ void	check_args(int argc)
 	}
 }
 
+/*
+Program overview:
+Count the # of arguments, if its correct, continue.
+Allocate memory and assign values to struct members based on arguments given.
+Check if the files in the arguments exist, and if we have access permissions.
+Set up fds based on results of previous function.
+fork() this process and write/read through pipe.
+*/
 int	main(int argc, char **argv, char **envp)
 {
 	int		origfd[2];

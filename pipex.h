@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:14 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 12:45:16 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:27:31 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	fd_setup(int origfd[2], t_data *data);
 // Creates the final exec path by going through all the $PATH directories
 // and concatenating the user's input behind it.
 // Behaviour changes if there is no PATH or user inputs an absolute path.
+// calls execve() once path has been created.
 void	build_path(char *goaldir, char **execargs, t_data *dat);
+// Print error, then exit() program.
+void	err_exit(void);
 
 #endif

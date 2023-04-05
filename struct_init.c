@@ -6,18 +6,14 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 12:22:09 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:25:46 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "pipex.h"
-#include <string.h>		// strerror()
-#include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
-#include <fcntl.h>		// open()
-#include <stdlib.h>		// exit()
-#include <sys/wait.h>	// wait()
-#include <stdio.h>		// printf(), perror()
+#include <stdlib.h>		// malloc(), exit()
+#include <stdio.h>		// perror()
 #include <errno.h>		// errno
 
 // Finds the $PATH variable in the environment, 
@@ -94,19 +90,19 @@ t_data	*build_struct(char **argv, char **envp)
 
 	new = malloc(sizeof(t_data));
 	if (new == NULL)
-		exit(EXIT_FAILURE);
+		err_exit();
 	new->argv = argv;
 	new->envp = envp;
 	new->pathav = 1;
 	new->pathdir = find_pathvar(envp, &(new->pathav));
 	if (new->pathdir == NULL && new->pathav == 1)
-		exit(EXIT_FAILURE);
+		err_exit();
 	new->execargs1 = find_execargs(argv[2]);
 	if (new->execargs1 == NULL)
-		exit(EXIT_FAILURE);
+		err_exit();
 	new->execargs2 = find_execargs(argv[3]);
 	if (new->execargs2 == NULL)
-		exit(EXIT_FAILURE);
+		err_exit();
 	new->maxpathlen = find_pathlen(argv, new->pathdir);
 	new->err[0] = 0;
 	new->err[1] = 0;

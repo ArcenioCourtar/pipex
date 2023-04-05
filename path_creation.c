@@ -6,24 +6,19 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:38:37 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 12:45:47 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:31:50 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "pipex.h"
-#include <string.h>		// strerror()
-#include <unistd.h>		// pipe(), close(), read(), execve(), dup2()
-#include <fcntl.h>		// open()
-#include <stdlib.h>		// exit()
-#include <sys/wait.h>	// wait()
-#include <stdio.h>		// printf(), perror()
+#include <unistd.h>		// execve()
 #include <errno.h>		// errno
 
 // creates full pathnames to the file we're looking for by 
 // copying the contents of dir and file into the previously allocated
 // memory of goal.
-// If the user specified a full path, just check that instead.
+// If the user specified a full path, just check that once instead.
 static void	create_path(char *goal, char *dir, char *file, int *pathav)
 {
 	int	i;
@@ -45,6 +40,10 @@ static void	create_path(char *goal, char *dir, char *file, int *pathav)
 	ft_memcpy(goal + i + 1, file, len + 1);
 }
 
+// Check if the $PATH variable is available. If it is, go through all possible
+// paths to see if execve() gets a "hit".
+// If the $PATH is not available (or the user hands an absolute path as arg), 
+// only do a single check.
 void	build_path(char *goaldir, char **execargs, t_data *dat)
 {
 	int	i;
