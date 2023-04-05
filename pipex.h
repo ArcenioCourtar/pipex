@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:14 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/01 14:34:20 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:45:16 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,18 @@ typedef struct s_data
 	int		maxpathlen;
 }	t_data;
 
-void	exit_func(void);
+// allocate memory and fill struct with the relevant data
 t_data	*build_struct(char **argv, char **envp);
-void	cmd_exec(int origfd[2], int pipefd[2], t_data *data);
+
+// execute commands
+void	cmd_exec(int origfd[2], t_data *data);
+// check existence of specified file, and permissions
 void	access_open(t_data *data);
-void	fd_setup(int origfd[2], int pipefd[2], t_data *data);
+// set up fd's according to the results found in access_open()
+void	fd_setup(int origfd[2], t_data *data);
+// Creates the final exec path by going through all the $PATH directories
+// and concatenating the user's input behind it.
+// Behaviour changes if there is no PATH or user inputs an absolute path.
+void	build_path(char *goaldir, char **execargs, t_data *dat);
 
 #endif

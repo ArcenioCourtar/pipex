@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:06 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/01 16:57:38 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:27:43 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,24 @@
 #include <stdio.h>		// printf(), perror()
 #include <errno.h>		// errno
 
-void	exit_func(void)
-{
-	exit(EXIT_FAILURE);
-}
-
 void	check_args(int argc)
 {
 	if (argc != 5)
-		exit(EXIT_FAILURE);
+	{
+		ft_printf("Usage: ./pipex file1 cmd1 cmd2 file2\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	int		origfd[2];
-	int		pipefd[2];
 	t_data	*dat;	
 
 	check_args(argc);
 	dat = build_struct(argv, envp);
 	access_open(dat);
-	fd_setup(origfd, pipefd, dat);
-	cmd_exec(origfd, pipefd, dat);
+	fd_setup(origfd, dat);
+	cmd_exec(origfd, dat);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:45:57 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/01 16:58:13 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:07:23 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,8 @@ void	access_open(t_data *dat)
 		dat->err[1] = errno;
 }
 
-void	fd_setup(int origfd[2], int pipefd[2], t_data *dat)
+void	fd_setup(int origfd[2], t_data *dat)
 {
-	pipe(pipefd);
 	if (dat->err[0] != 0)
 		ft_printf_err("%s: %s: %s\n", dat->argv[0], dat->argv[1], \
 		strerror(dat->err[0]));

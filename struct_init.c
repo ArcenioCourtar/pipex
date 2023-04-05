@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/01 15:51:21 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:22:09 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,19 +94,19 @@ t_data	*build_struct(char **argv, char **envp)
 
 	new = malloc(sizeof(t_data));
 	if (new == NULL)
-		exit_func();
+		exit(EXIT_FAILURE);
 	new->argv = argv;
 	new->envp = envp;
 	new->pathav = 1;
 	new->pathdir = find_pathvar(envp, &(new->pathav));
 	if (new->pathdir == NULL && new->pathav == 1)
-		exit_func();
+		exit(EXIT_FAILURE);
 	new->execargs1 = find_execargs(argv[2]);
 	if (new->execargs1 == NULL)
-		exit_func();
+		exit(EXIT_FAILURE);
 	new->execargs2 = find_execargs(argv[3]);
 	if (new->execargs2 == NULL)
-		exit_func();
+		exit(EXIT_FAILURE);
 	new->maxpathlen = find_pathlen(argv, new->pathdir);
 	new->err[0] = 0;
 	new->err[1] = 0;

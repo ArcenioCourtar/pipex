@@ -6,7 +6,7 @@
 #    By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/12 16:43:02 by acourtar          #+#    #+#              #
-#    Updated: 2023/04/01 15:47:14 by acourtar         ###   ########.fr        #
+#    Updated: 2023/04/05 12:46:06 by acourtar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ NAME		:=	pipex
 OBJFILES	:=	pipex.o \
 			process_forking.o \
 			struct_init.o \
-			fd_init.o
+			fd_init.o \
+			path_creation.o
 HEADERFILE	:=	pipex.h
 
 all: $(NAME)
