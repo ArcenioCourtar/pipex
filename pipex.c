@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 18:14:06 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/08 15:55:49 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/08 16:30:16 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,5 @@ int	main(int argc, char **argv, char **envp)
 	access_open(&dat);
 	fd_setup(origfd, &dat);
 	cmd_exec(origfd, &dat);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
