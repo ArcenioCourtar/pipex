@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:38:37 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 13:31:50 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:17:17 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@
 // copying the contents of dir and file into the previously allocated
 // memory of goal.
 // If the user specified a full path, just check that once instead.
+// If the user specifies an empty string or a string  with exclusively
+// spaces, don't attempt to append *file to *dir
 static void	create_path(char *goal, char *dir, char *file, int *pathav)
 {
 	int	i;
 	int	len;
 
-	if (dir == NULL || ft_strchr(file, '/') != NULL)
+	if (file != NULL && (dir == NULL || ft_strchr(file, '/') != NULL))
 	{
 		len = ft_strlen(file);
 		ft_memcpy(goal, file, len + 1);
@@ -36,8 +38,12 @@ static void	create_path(char *goal, char *dir, char *file, int *pathav)
 	ft_memcpy(goal, dir, len);
 	i = len;
 	goal[i] = '/';
-	len = ft_strlen(file);
-	ft_memcpy(goal + i + 1, file, len + 1);
+	goal[i + 1] = '\0';
+	if (file != NULL)
+	{
+		len = ft_strlen(file);
+		ft_memcpy(goal + i + 1, file, len + 1);
+	}
 }
 
 // Check if the $PATH variable is available. If it is, go through all possible

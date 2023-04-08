@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 19:11:31 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:15:25 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	find_pathlen(char **argv, char **pathdir)
 			i++;
 		}
 	}
-	return (arglen + pathlen + 1);
+	return (arglen + pathlen + 2);
 }
 
 // ft_split for any additional arguments being passed to execve()
