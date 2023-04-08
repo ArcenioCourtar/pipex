@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 12:42:07 by acourtar          #+#    #+#             */
-/*   Updated: 2023/03/22 14:48:57 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/08 13:32:23 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,15 @@ char	**ft_split(char const *s, char c)
 	int		succes;
 
 	sections = section_counter(s, c);
+	ft_printf("sections: %i\n", sections);
 	array = malloc((sections + 1) * sizeof(char *));
 	if (array == NULL)
 		return (NULL);
 	array[sections] = NULL;
-	succes = write_sections(s, c, array);
+	if (sections == 0)
+		succes = 1;
+	else
+		succes = write_sections(s, c, array);
 	if (succes == 0)
 		return (NULL);
 	return (array);
