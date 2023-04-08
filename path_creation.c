@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:38:37 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/08 15:17:17 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:41:45 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,8 @@ static void	create_path(char *goal, char *dir, char *file, int *pathav)
 	i = len;
 	goal[i] = '/';
 	goal[i + 1] = '\0';
-	if (file != NULL)
-	{
-		len = ft_strlen(file);
-		ft_memcpy(goal + i + 1, file, len + 1);
-	}
+	len = ft_strlen(file);
+	ft_memcpy(goal + i + 1, file, len + 1);
 }
 
 // Check if the $PATH variable is available. If it is, go through all possible
@@ -55,15 +52,17 @@ void	build_path(char *goaldir, char **execargs, t_data *dat)
 	int	i;
 
 	i = 0;
-	while (dat->pathav == 1 && dat->pathdir[i] != NULL)
+	while (dat->pathav == 1 && dat->pathdir[i] != NULL && execargs[0] != NULL)
 	{
 		create_path(goaldir, dat->pathdir[i], execargs[0], &(dat->pathav));
 		execve(goaldir, execargs, dat->envp);
 		i++;
 	}
-	if (dat->pathav == 0)
+	if (dat->pathav == 0 && execargs[0] != NULL)
 	{
 		create_path(goaldir, NULL, execargs[0], &(dat->pathav));
 		execve(goaldir, execargs, dat->envp);
 	}
+	if (dat->pathdir == NULL)
+		dat->pathav = -1;
 }
