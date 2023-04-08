@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:36:02 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/05 19:08:39 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/08 16:44:46 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@ static void	child_in(int f1, int pipefd[2], t_data *dat)
 {
 	char	*goaldir;
 
-	close(pipefd[0]);
-	dup2(f1, STDIN_FILENO);
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[1]);
-	close(f1);
+	if (close(pipefd[0]) == -1)
+		err_exit();
+	if (dup2(f1, STDIN_FILENO) == -1 || dup2(pipefd[1], STDOUT_FILENO) == -1)
+		err_exit();
+	if (close(pipefd[1]) == -1 || close(f1) == -1)
+		err_exit();
 	goaldir = malloc(dat->maxpathlen);
 	if (goaldir == NULL)
 		err_exit();
@@ -47,11 +48,12 @@ static void	child_out(int f2, int pipefd[2], t_data *dat)
 {
 	char	*goaldir;
 
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	dup2(f2, STDOUT_FILENO);
-	close(pipefd[0]);
-	close(f2);
+	if (close(pipefd[1]) == -1)
+		err_exit();
+	if (dup2(pipefd[0], STDIN_FILENO) == -1 || dup2(f2, STDOUT_FILENO) == -1)
+		err_exit();
+	if (close(pipefd[0]) == -1 || close(f2) == -1)
+		err_exit();
 	goaldir = malloc(dat->maxpathlen);
 	if (goaldir == NULL)
 		err_exit();
