@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:42:17 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/08 15:15:25 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/17 09:19:09 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ static char	**find_execargs(char *argv)
 {
 	char	**arg_arr;
 
-	arg_arr = ft_split(argv, ' ');
+	if (argv[0] == ' ')
+		arg_arr = ft_split(" ", ' ');
+	else
+		arg_arr = ft_split(argv, ' ');
 	if (arg_arr == NULL)
 		return (NULL);
 	return (arg_arr);
