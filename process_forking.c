@@ -6,7 +6,7 @@
 /*   By: acourtar <acourtar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 16:36:02 by acourtar          #+#    #+#             */
-/*   Updated: 2023/04/08 16:44:46 by acourtar         ###   ########.fr       */
+/*   Updated: 2023/04/17 08:51:03 by acourtar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,18 @@ void	cmd_exec(int origfd[2], t_data *dat)
 	if (pipe(pipefd) < 0)
 		err_exit();
 	child_count = child_counter(origfd, pipefd, dat);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	close(origfd[0]);
-	close(origfd[1]);
+	if (close(pipefd[0]) == -1 || close(pipefd[1]) == -1)
+		err_exit();
+	if (dat->err[0] == 0)
+	{
+		if (close(origfd[0]) == -1)
+			err_exit();
+	}
+	if (dat->err[1] == 0)
+	{
+		if (close(origfd[1]) == -1)
+			err_exit();
+	}
 	while (child_count > 0)
 	{
 		waitpid(-1, NULL, 0);
